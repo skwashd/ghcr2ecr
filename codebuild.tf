@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "codebuild" {
       "ecr:PutImage",
       "ecr:UploadLayerPart",
     ]
-    resources = ["arn:aws:ecr:${var.aws_region}:${data.aws_caller_identity.current.account_id}:repository/*"]
+    resources = ["arn:aws:ecr:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:repository/*"]
   }
 
   statement {
@@ -88,7 +88,7 @@ data "template_file" "buildspec" {
   template = file("${path.module}/buildspec.yml.tpl")
   vars = {
     aws_account_id      = data.aws_caller_identity.current.account_id,
-    aws_region          = var.aws_region,
+    aws_region          = data.aws_region.current.name
     github_org          = var.github_org
     build_script_url    = var.build_script_url
     build_script_sha256 = var.build_script_sha256

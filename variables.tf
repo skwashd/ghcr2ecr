@@ -21,12 +21,6 @@ variable "build_script_sha256" {
   default     = "5c8623f32b563135e3debe006ff1405bff5104c57604cfe47614410458e6cfab"
 }
 
-variable "aws_region" {
-  description = "The AWS region to deploy the resources."
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "build_timeout" {
   description = "Build timeout in seconds."
   type        = number
