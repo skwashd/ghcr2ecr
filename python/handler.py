@@ -15,15 +15,15 @@ def verify_signature(header: str, body: str, webhook_secret: str) -> bool:
     if algo != "sha256":
         return False
 
-    mac = hmac.new(
-        bytes(webhook_secret, "utf-8"), body, hashlib.sha256
-    ).hexdigest()
+    mac = hmac.new(bytes(webhook_secret, "utf-8"), body, hashlib.sha256).hexdigest()
     return hmac.compare_digest(mac, signature)
 
 
 def load_secret(name):
     ssm = boto3.client("ssm")
-    return json.loads(ssm.get_parameter(Name=name, WithDecryption=True)["Parameter"]["Value"])
+    return json.loads(
+        ssm.get_parameter(Name=name, WithDecryption=True)["Parameter"]["Value"]
+    )
 
 
 def trigger_build(org_name, image_name):
@@ -50,7 +50,9 @@ def handler(event, context):
         WEBHOOK_SECRET = load_secret(f"/{os.environ.get('AWS_LAMBDA_FUNCTION_NAME')}/WEBHOOK_SECRET")
 
     signature = event["headers"].get("X-Hub-Signature-256")
-    if not signature or not verify_signature(signature, event["body"].encode(), WEBHOOK_SECRET):
+    if not signature or not verify_signature(
+        signature, event["body"].encode(), WEBHOOK_SECRET
+    ):
         return {"statusCode": 401, "body": "Unauthorized"}
 
     event_type = event["headers"].get("X-GitHub-Event")
@@ -59,7 +61,11 @@ def handler(event, context):
 
     body = json.loads(event["body"])
 
-    if event_type != "package_v2" or body["action"] not in ["create", "published", "updated"]:
+    if event_type != "package_v2" or body["action"] not in [
+        "create",
+        "published",
+        "updated",
+    ]:
         return {"statusCode": 400, "body": "Bad Request"}
 
     if body["package"]["ecosystem"] != "CONTAINER":
