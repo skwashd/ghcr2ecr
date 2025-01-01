@@ -1,5 +1,11 @@
 # GitHub Container Registry to Amazon Elastic Container Registry Image Sync
 
+## THIS PROJECT IS NO LONGER MAINTAINED
+
+I created this before [AWS supported OIDC ffrom GitHub](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services). Don't waste your time with this project. Use OIDC instead.
+
+## Old Docs
+
 ghcr2ecr is a terraform module that sets up the tooling you need to push Docker
 images from GitHub Container Registry (GHCR) to Amazon Elastic Container
 Registry (ECR).
